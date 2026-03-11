@@ -1,0 +1,279 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Precificação de Diárias · Pousada</title>
+  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;600;700&family=Source+Sans+3:wght@300;400;600&display=swap" rel="stylesheet" />
+  <style>
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    body { background: #faf7f2; font-family: 'Source Sans 3', sans-serif; color: #1a1208; }
+    .app { max-width: 960px; margin: 0 auto; padding: 2rem 1.5rem 4rem; }
+    h1 { font-family: 'Playfair Display', serif; font-size: 2.2rem; font-weight: 700; letter-spacing: -0.02em; line-height: 1.1; }
+    h2 { font-family: 'Playfair Display', serif; font-size: 1.1rem; font-weight: 600; color: #5c3d1e; margin-bottom: 1rem; }
+    .subtitle { font-size: 0.9rem; color: #8b6a40; margin-top: 0.3rem; font-weight: 300; letter-spacing: 0.05em; text-transform: uppercase; }
+    .top-bar { margin-bottom: 2rem; }
+    .tag { display: inline-block; background: #5c3d1e; color: #f5e6cc; font-size: 0.7rem; letter-spacing: 0.12em; text-transform: uppercase; padding: 0.25rem 0.75rem; border-radius: 2px; }
+    .card { background: white; border: 1px solid #e8d9c0; border-radius: 10px; padding: 1.5rem; margin-bottom: 2rem; }
+    .params-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(180px, 1fr)); gap: 1rem; }
+    .param-card { background: white; border: 1px solid #e8d9c0; border-radius: 8px; padding: 1rem 1.2rem; transition: box-shadow 0.2s; }
+    .param-card:hover { box-shadow: 0 4px 16px rgba(90,50,10,0.1); }
+    .param-label { font-size: 0.72rem; text-transform: uppercase; letter-spacing: 0.08em; color: #8b6a40; margin-bottom: 0.5rem; font-weight: 600; }
+    .param-input-wrap { display: flex; align-items: center; gap: 0.3rem; }
+    .param-prefix { font-size: 0.85rem; color: #c8a96e; font-weight: 600; }
+    .param-input { border: none; outline: none; background: transparent; font-size: 1.3rem; font-weight: 600; color: #1a1208; font-family: 'Playfair Display', serif; width: 100%; }
+    .param-input:focus { border-bottom: 2px solid #c8a96e; }
+    .param-slider { width: 100%; margin-top: 0.5rem; accent-color: #c8a96e; }
+    .table-wrap { overflow-x: auto; }
+    table { width: 100%; border-collapse: collapse; }
+    th { font-size: 0.68rem; text-transform: uppercase; letter-spacing: 0.1em; color: #8b6a40; font-weight: 600; padding: 0.6rem 0.8rem; text-align: right; border-bottom: 2px solid #e8d9c0; }
+    th:first-child { text-align: left; }
+    td { padding: 0.75rem 0.8rem; text-align: right; font-size: 0.9rem; border-bottom: 1px solid #f0e8da; transition: background 0.15s; }
+    td:first-child { text-align: left; font-weight: 600; font-family: 'Playfair Display', serif; font-size: 1rem; }
+    tr:hover td { background: #fdf4e7; }
+    .avg-row td { background: #fdf4e7 !important; font-weight: 600; border-top: 2px solid #e8d9c0; font-size: 0.85rem; color: #5c3d1e; }
+    .badge { display: inline-block; padding: 0.2rem 0.6rem; border-radius: 20px; font-size: 0.8rem; font-weight: 700; color: white; }
+    .summary-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(140px, 1fr)); gap: 1rem; margin-top: 1rem; }
+    .stat { text-align: center; }
+    .stat-val { font-family: 'Playfair Display', serif; font-size: 1.6rem; font-weight: 700; }
+    .stat-lbl { font-size: 0.7rem; text-transform: uppercase; letter-spacing: 0.08em; color: #8b6a40; margin-top: 0.2rem; }
+    .red { color: #ef4444; }
+    .green { color: #22c55e; }
+    .brown { color: #5c3d1e; }
+
+    /* Tooltip */
+    .param-label-wrap { display: flex; align-items: center; gap: 0.35rem; margin-bottom: 0.5rem; }
+    .tooltip-icon { display: inline-flex; align-items: center; justify-content: center; width: 14px; height: 14px; border-radius: 50%; background: #e8d9c0; color: #8b6a40; font-size: 0.6rem; font-weight: 700; cursor: default; position: relative; font-style: normal; }
+    .tooltip-icon:hover .tooltip-text { opacity: 1; pointer-events: auto; }
+    .tooltip-text { opacity: 0; pointer-events: none; position: absolute; bottom: calc(100% + 6px); left: 50%; transform: translateX(-50%); background: #1a1208; color: #faf7f2; font-size: 0.7rem; font-weight: 400; line-height: 1.4; padding: 0.5rem 0.7rem; border-radius: 6px; white-space: normal; width: 180px; text-align: left; transition: opacity 0.2s; z-index: 10; text-transform: none; letter-spacing: 0; }
+    .tooltip-text::after { content: ''; position: absolute; top: 100%; left: 50%; transform: translateX(-50%); border: 5px solid transparent; border-top-color: #1a1208; }
+    /* Manual */
+    .manual-toggle { background: none; border: 1px solid #c8a96e; color: #5c3d1e; font-family: 'Source Sans 3', sans-serif; font-size: 0.8rem; font-weight: 600; padding: 0.4rem 1rem; border-radius: 4px; cursor: pointer; margin-top: 0.8rem; letter-spacing: 0.05em; }
+    .manual-toggle:hover { background: #fdf4e7; }
+    .manual-body { display: none; margin-top: 1.2rem; border-top: 1px solid #e8d9c0; padding-top: 1.2rem; }
+    .manual-body.open { display: block; }
+    .manual-body h3 { font-family: 'Playfair Display', serif; font-size: 0.95rem; color: #5c3d1e; margin: 1rem 0 0.4rem; }
+    .manual-body h3:first-child { margin-top: 0; }
+    .manual-body p { font-size: 0.82rem; color: #5c3d1e; line-height: 1.6; }
+    .manual-body ul { font-size: 0.82rem; color: #5c3d1e; line-height: 1.8; padding-left: 1.2rem; }
+
+    @media (max-width: 600px) {
+      h1 { font-size: 1.6rem; }
+      .app { padding: 1.2rem 1rem 3rem; }
+      td, th { padding: 0.5rem 0.4rem; font-size: 0.78rem; }
+      .stat-val { font-size: 1.2rem; }
+    }
+  </style>
+</head>
+<body>
+<div class="app">
+  <div class="top-bar">
+    <div class="tag">Pousada &middot; Gestão de Tarifas</div>
+    <h1 style="margin-top:0.6rem">Precificação de Diárias</h1>
+    <p class="subtitle">Calcule tarifas por número de hóspedes</p>
+  </div>
+
+
+  <div class="card" style="margin-bottom:2rem">
+    <h2>&#128216; Como usar este app</h2>
+    <p style="font-size:0.85rem;color:#8b6a40;line-height:1.5">Configure os parâmetros base e a tabela de tarifas se atualiza automaticamente.</p>
+    <button class="manual-toggle" onclick="toggleManual()">&#9660; Ver manual completo</button>
+    <div class="manual-body" id="manual-body">
+      <h3>&#128204; Custo Fixo (por quarto)</h3>
+      <p>É o custo operacional fixo da diária, independente do número de hóspedes — energia, limpeza, manutenção, etc. Preencha com o valor médio que você gasta por quarto por noite.</p>
+      <h3>&#9749; Café p/ Hóspede</h3>
+      <p>Custo do café da manhã por pessoa. É multiplicado automaticamente pelo número de hóspedes na tabela.</p>
+      <h3>&#10052; Ar-Condicionado</h3>
+      <p>Custo fixo do uso do ar-condicionado por diária. Mesmo valor para qualquer número de hóspedes.</p>
+      <h3>&#128176; Margem de Lucro</h3>
+      <p>Valor em R$ que você quer lucrar por hóspede. Em alta temporada (Réveillon, Carnaval), aumente esse valor. É multiplicado pelo número de hóspedes na tabela.</p>
+      <h3>&#128100; Máx. de Hóspedes</h3>
+      <p>Capacidade máxima do seu quarto. A tabela exibe uma linha para cada número de hóspedes, de 1 até o máximo definido.</p>
+      <h3>&#127322; Desconto (%)</h3>
+      <p>Percentual de desconto aplicado sobre a tarifa bruta. Use para Black Friday, pacotes especiais ou negociações pontuais. Pode ser configurado até 100%.</p>
+      <h3>&#128308; Cores do % Lucro</h3>
+      <ul>
+        <li><b>Verde</b> — margem acima de 45% (ótimo)</li>
+        <li><b>Amarelo</b> — margem entre 35% e 44% (aceitável)</li>
+        <li><b>Laranja</b> — margem abaixo de 35% (atenção)</li>
+        <li><b>Vermelho no Lucro Líquido</b> — operação no prejuízo</li>
+      </ul>
+    </div>
+  </div>
+
+  <div class="card">
+    <h2>&#9881; Parâmetros Base</h2>
+    <div class="params-grid" id="params-grid"></div>
+  </div>
+
+  <div class="card">
+    <h2>&#128203; Tabela de Tarifas</h2>
+    <div class="table-wrap">
+      <table>
+        <thead>
+          <tr>
+            <th>Hóspedes</th>
+            <th>Custo Fixo</th>
+            <th>Café</th>
+            <th>A/C</th>
+            <th>Margem</th>
+            <th>Tarifa Bruta</th>
+            <th>Desconto</th>
+            <th>C/ Desconto</th>
+            <th>Lucro Líq.</th>
+            <th>% Lucro</th>
+          </tr>
+        </thead>
+        <tbody id="table-body"></tbody>
+      </table>
+    </div>
+  </div>
+
+  <div class="card">
+    <h2>&#128202; Visão Geral — Tarifa Média</h2>
+    <div class="summary-grid" id="summary-grid"></div>
+  </div>
+</div>
+
+<script>
+  const fmt = (v) => v.toLocaleString("pt-BR", { style: "currency", currency: "BRL" });
+
+  const params = {
+    custoFixo:   { label: "Custo Fixo",       prefix: "R$", value: 0,   min: 0, max: 999, tip: "Custo operacional fixo por quarto por noite (energia, limpeza, manutenção). Não varia com o número de hóspedes." },
+    cafePorPax:  { label: "Café p/ Hóspede",  prefix: "R$", value: 0,   min: 0, max: 999, tip: "Custo do café por hospede (média do valor dos insumos, mão de obra etc.). Esse valor varia de acordo com a quantidade de hóspedes." },
+    arCond:      { label: "Ar-Condicionado",  prefix: "R$", value: 0,   min: 0, max: 999, tip: "Custo do ar condicionado fixo por quarto por noite (energia, manutenção, depreciação). Não varia com o número de hóspedes." },
+    margemValor: { label: "Margem de Lucro",  prefix: "R$", value: 0,   min: 0, max: 9999, tip: "Valor pretendido de lucro com a diária. Esse valor varia de acordo com a quantidade de hóspedes." },
+    maxPax:      { label: "Máx. de Hóspedes", prefix: "#",  value: 1,   min: 1, max: 10, tip: "Quantidade de hospedes por quarto por noite (minimo 1 maximo 10)." },
+    desconto:    { label: "Desconto (%)",     prefix: "%",  value: 0,   min: 0, max: 100, tip: "Desconto, vai de 0% a 100%." },
+  };
+
+  // Build param cards
+  const grid = document.getElementById("params-grid");
+  Object.entries(params).forEach(([key, p]) => {
+    const card = document.createElement("div");
+    card.className = "param-card";
+    card.innerHTML =
+      '<div class="param-label-wrap">' +
+        '<span class="param-label" style="margin-bottom:0">' + p.label + '</span>' +
+        (p.tip ? '<span class="tooltip-icon">?<span class="tooltip-text">' + p.tip + '</span></span>' : '') +
+      '</div>' +
+      '<div class="param-input-wrap">' +
+        '<span class="param-prefix">' + p.prefix + '</span>' +
+        '<input class="param-input" id="input-' + key + '" type="number" value="' + p.value + '" min="' + p.min + '" max="' + p.max + '" />' +
+      '</div>' +
+      '<input class="param-slider" id="slider-' + key + '" type="range" min="' + p.min + '" max="' + p.max + '" value="' + p.value + '" />';
+    grid.appendChild(card);
+
+    const input  = card.querySelector("#input-" + key);
+    const slider = card.querySelector("#slider-" + key);
+
+    input.addEventListener("input", function() {
+      var v = parseFloat(input.value) || 0;
+      p.value = v;
+      slider.value = v;
+      render();
+    });
+    slider.addEventListener("input", function() {
+      var v = parseFloat(slider.value);
+      p.value = v;
+      input.value = v;
+      render();
+    });
+  });
+
+  function profitColor(pct) {
+    var n = parseFloat(pct);
+    if (n < 0)  return "#ef4444";
+    if (n >= 45) return "#22c55e";
+    if (n >= 35) return "#eab308";
+    return "#f97316";
+  }
+
+  function calcRows() {
+    var rows = [];
+    var maxPax = Math.max(1, Math.min(10, Math.round(params.maxPax.value)));
+    for (var pax = 1; pax <= maxPax; pax++) {
+      var custo = params.custoFixo.value;
+      var cafe  = parseFloat((params.cafePorPax.value * pax).toFixed(2));
+      var ar    = params.arCond.value;
+      var total_custo = custo + cafe + ar;
+      var margem   = params.margemValor.value * pax;
+      var bruto    = total_custo + margem;
+      var desc_val = parseFloat(((params.desconto.value / 100) * bruto).toFixed(2));
+      var com_desc = bruto - desc_val;
+      var lucro_liq = com_desc - total_custo;
+      var perc_lucro = com_desc !== 0 ? ((lucro_liq / com_desc) * 100).toFixed(0) : 0;
+      rows.push({ pax: pax, custo: custo, cafe: cafe, ar: ar, margem: margem, bruto: bruto, desc_val: desc_val, com_desc: com_desc, lucro_liq: lucro_liq, perc_lucro: perc_lucro });
+    }
+    return rows;
+  }
+
+  function render() {
+    var rows = calcRows();
+    var tbody = document.getElementById("table-body");
+    tbody.innerHTML = "";
+
+    rows.forEach(function(r) {
+      var tr = document.createElement("tr");
+      tr.innerHTML =
+        "<td>" + r.pax + " pax</td>" +
+        "<td>" + fmt(r.custo) + "</td>" +
+        "<td>" + fmt(r.cafe) + "</td>" +
+        "<td>" + fmt(r.ar) + "</td>" +
+        "<td>" + fmt(r.margem) + "</td>" +
+        '<td style="font-weight:600">' + fmt(r.bruto) + "</td>" +
+        '<td class="red">&minus;' + fmt(r.desc_val) + "</td>" +
+        '<td style="font-weight:700;color:#5c3d1e">' + fmt(r.com_desc) + "</td>" +
+        '<td style="font-weight:600;color:' + (r.lucro_liq >= 0 ? '#22c55e' : '#ef4444') + '">' + fmt(r.lucro_liq) + "</td>" +
+        '<td><span class="badge" style="background:' + profitColor(r.perc_lucro) + '">' + r.perc_lucro + "%</span></td>";
+      tbody.appendChild(tr);
+    });
+
+    var sumBruto = 0, sumDesc = 0, sumDesc2 = 0, sumLucro = 0, sumPct = 0;
+    rows.forEach(function(r) {
+      sumBruto  += r.bruto;
+      sumDesc   += r.desc_val;
+      sumDesc2  += r.com_desc;
+      sumLucro  += r.lucro_liq;
+      sumPct    += parseFloat(r.perc_lucro);
+    });
+    var n = rows.length;
+    var avg = {
+      bruto:      sumBruto / n,
+      desc_val:   sumDesc / n,
+      com_desc:   sumDesc2 / n,
+      lucro_liq:  sumLucro / n,
+      perc_lucro: (sumPct / n).toFixed(0),
+    };
+
+    var avgTr = document.createElement("tr");
+    avgTr.className = "avg-row";
+    avgTr.innerHTML =
+      "<td>Média</td><td>—</td><td>—</td><td>—</td><td>—</td>" +
+      "<td>" + fmt(avg.bruto) + "</td>" +
+      '<td class="red">&minus;' + fmt(avg.desc_val) + "</td>" +
+      '<td class="brown">' + fmt(avg.com_desc) + "</td>" +
+      '<td style="color:' + (avg.lucro_liq >= 0 ? '#22c55e' : '#ef4444') + '">' + fmt(avg.lucro_liq) + "</td>" +
+      '<td><span class="badge" style="background:' + profitColor(avg.perc_lucro) + '">' + avg.perc_lucro + "%</span></td>";
+    tbody.appendChild(avgTr);
+
+    var sg = document.getElementById("summary-grid");
+    sg.innerHTML =
+      '<div class="stat"><div class="stat-val">' + fmt(avg.bruto) + '</div><div class="stat-lbl">Tarifa Bruta Média</div></div>' +
+      '<div class="stat"><div class="stat-val red">&minus;' + fmt(avg.desc_val) + '</div><div class="stat-lbl">Desconto Médio</div></div>' +
+      '<div class="stat"><div class="stat-val brown">' + fmt(avg.com_desc) + '</div><div class="stat-lbl">Tarifa Final Média</div></div>' +
+      '<div class="stat"><div class="stat-val" style="color:' + (avg.lucro_liq >= 0 ? '#22c55e' : '#ef4444') + '">' + fmt(avg.lucro_liq) + '</div><div class="stat-lbl">Lucro Líquido Médio</div></div>' +
+      '<div class="stat"><div class="stat-val" style="color:' + profitColor(avg.perc_lucro) + '">' + avg.perc_lucro + '%</div><div class="stat-lbl">Margem de Lucro Média</div></div>';
+  }
+
+  render();
+
+  function toggleManual() {
+    var body = document.getElementById('manual-body');
+    var btn = document.querySelector('.manual-toggle');
+    body.classList.toggle('open');
+    btn.textContent = body.classList.contains('open') ? '▲ Fechar manual' : '▼ Ver manual completo';
+  }
+</script>
+</body>
+</html>
