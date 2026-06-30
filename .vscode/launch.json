@@ -1,0 +1,12 @@
+{
+    "version": "0.2.0",
+    "configurations": [
+        {
+            "type": "chrome",
+            "request": "launch",
+            "name": "Launch Chrome against localhost",
+            "url": "file:///C:/Users/Jason/Desktop/PROJETOS/03%20-%20DONE/preco_inteligente/index.html",
+            "webRoot": "${workspaceFolder}"
+        }
+    ]
+}

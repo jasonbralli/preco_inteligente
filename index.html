@@ -11,14 +11,14 @@
     .app { max-width: 960px; margin: 0 auto; padding: 2rem 1.5rem 4rem; }
     h1 { font-family: 'Playfair Display', serif; font-size: 2.2rem; font-weight: 700; letter-spacing: -0.02em; line-height: 1.1; }
     h2 { font-family: 'Playfair Display', serif; font-size: 1.1rem; font-weight: 600; color: #5c3d1e; margin-bottom: 1rem; }
-    .subtitle { font-size: 0.9rem; color: #8b6a40; margin-top: 0.3rem; font-weight: 300; letter-spacing: 0.05em; text-transform: uppercase; }
+    .subtitle { font-size: 0.9rem; color: #6b4f2e; margin-top: 0.3rem; font-weight: 300; letter-spacing: 0.05em; text-transform: uppercase; }
     .top-bar { margin-bottom: 2rem; }
     .tag { display: inline-block; background: #5c3d1e; color: #f5e6cc; font-size: 0.7rem; letter-spacing: 0.12em; text-transform: uppercase; padding: 0.25rem 0.75rem; border-radius: 2px; }
     .card { background: white; border: 1px solid #e8d9c0; border-radius: 10px; padding: 1.5rem; margin-bottom: 2rem; }
     .params-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(180px, 1fr)); gap: 1rem; }
     .param-card { background: white; border: 1px solid #e8d9c0; border-radius: 8px; padding: 1rem 1.2rem; transition: box-shadow 0.2s; }
     .param-card:hover { box-shadow: 0 4px 16px rgba(90,50,10,0.1); }
-    .param-label { font-size: 0.72rem; text-transform: uppercase; letter-spacing: 0.08em; color: #8b6a40; margin-bottom: 0.5rem; font-weight: 600; }
+    .param-label { font-size: 0.72rem; text-transform: uppercase; letter-spacing: 0.08em; color: #6b4f2e; margin-bottom: 0.5rem; font-weight: 600; }
     .param-input-wrap { display: flex; align-items: center; gap: 0.3rem; }
     .param-prefix { font-size: 0.85rem; color: #c8a96e; font-weight: 600; }
     .param-input { border: none; outline: none; background: transparent; font-size: 1.3rem; font-weight: 600; color: #1a1208; font-family: 'Playfair Display', serif; width: 100%; }
@@ -26,7 +26,7 @@
     .param-slider { width: 100%; margin-top: 0.5rem; accent-color: #c8a96e; }
     .table-wrap { overflow-x: auto; }
     table { width: 100%; border-collapse: collapse; }
-    th { font-size: 0.68rem; text-transform: uppercase; letter-spacing: 0.1em; color: #8b6a40; font-weight: 600; padding: 0.6rem 0.8rem; text-align: right; border-bottom: 2px solid #e8d9c0; }
+    th { font-size: 0.68rem; text-transform: uppercase; letter-spacing: 0.1em; color: #6b4f2e; font-weight: 600; padding: 0.6rem 0.8rem; text-align: right; border-bottom: 2px solid #e8d9c0; }
     th:first-child { text-align: left; }
     td { padding: 0.75rem 0.8rem; text-align: right; font-size: 0.9rem; border-bottom: 1px solid #f0e8da; transition: background 0.15s; }
     td:first-child { text-align: left; font-weight: 600; font-family: 'Playfair Display', serif; font-size: 1rem; }
@@ -36,14 +36,38 @@
     .summary-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(140px, 1fr)); gap: 1rem; margin-top: 1rem; }
     .stat { text-align: center; }
     .stat-val { font-family: 'Playfair Display', serif; font-size: 1.6rem; font-weight: 700; }
-    .stat-lbl { font-size: 0.7rem; text-transform: uppercase; letter-spacing: 0.08em; color: #8b6a40; margin-top: 0.2rem; }
+    .stat-lbl { font-size: 0.7rem; text-transform: uppercase; letter-spacing: 0.08em; color: #6b4f2e; margin-top: 0.2rem; }
     .red { color: #ef4444; }
     .green { color: #22c55e; }
     .brown { color: #5c3d1e; }
-
+    
+    /* Skip link - navegação por teclado */
+    .skip-link {
+      position: absolute;
+      top: -40px;
+      left: 0;
+      background: #5c3d1e;
+      color: white;
+      padding: 8px 16px;
+      z-index: 100;
+      transition: top 0.2s;
+      text-decoration: none;
+      font-size: 0.85rem;
+      font-weight: 600;
+    }
+    .skip-link:focus {
+      top: 0;
+    }
+    
+    /* Focus visible states */
+    *:focus-visible {
+      outline: 2px solid #5c3d1e;
+      outline-offset: 2px;
+    }
+    
     /* Tooltip */
     .param-label-wrap { display: flex; align-items: center; gap: 0.35rem; margin-bottom: 0.5rem; }
-    .tooltip-icon { display: inline-flex; align-items: center; justify-content: center; width: 14px; height: 14px; border-radius: 50%; background: #e8d9c0; color: #8b6a40; font-size: 0.6rem; font-weight: 700; cursor: default; position: relative; font-style: normal; }
+    .tooltip-icon { display: inline-flex; align-items: center; justify-content: center; width: 14px; height: 14px; border-radius: 50%; background: #e8d9c0; color: #6b4f2e; font-size: 0.6rem; font-weight: 700; cursor: default; position: relative; font-style: normal; }
     .tooltip-icon:hover .tooltip-text { opacity: 1; pointer-events: auto; }
     .tooltip-text { opacity: 0; pointer-events: none; position: absolute; bottom: calc(100% + 6px); left: 50%; transform: translateX(-50%); background: #1a1208; color: #faf7f2; font-size: 0.7rem; font-weight: 400; line-height: 1.4; padding: 0.5rem 0.7rem; border-radius: 6px; white-space: normal; width: 180px; text-align: left; transition: opacity 0.2s; z-index: 10; text-transform: none; letter-spacing: 0; }
     .tooltip-text::after { content: ''; position: absolute; top: 100%; left: 50%; transform: translateX(-50%); border: 5px solid transparent; border-top-color: #1a1208; }
@@ -66,6 +90,8 @@
   </style>
 </head>
 <body>
+<a href="#main-content" class="skip-link">Pular para o conteúdo principal</a>
+<main id="main-content">
 <div class="app">
   <div class="top-bar">
     <div class="tag">Pousada &middot; Gestão de Tarifas</div>
@@ -76,7 +102,7 @@
 
   <div class="card" style="margin-bottom:2rem">
     <h2>&#128216; Como usar este app</h2>
-    <p style="font-size:0.85rem;color:#8b6a40;line-height:1.5">Configure os parâmetros base e a tabela de tarifas se atualiza automaticamente.</p>
+    <p style="font-size:0.85rem;color:#6b4f2e;line-height:1.5">Configure os parâmetros base e a tabela de tarifas se atualiza automaticamente.</p>
     <button class="manual-toggle" onclick="toggleManual()">&#9660; Ver manual completo</button>
     <div class="manual-body" id="manual-body">
       <h3>&#128204; Custo Fixo (por quarto)</h3>
@@ -134,17 +160,18 @@
     <div class="summary-grid" id="summary-grid"></div>
   </div>
 </div>
+</main>
 
 <script>
   const fmt = (v) => v.toLocaleString("pt-BR", { style: "currency", currency: "BRL" });
 
   const params = {
-    custoFixo:   { label: "Custo Fixo",       prefix: "R$", value: 0,   min: 0, max: 999, tip: "Custo operacional fixo por quarto por noite (energia, limpeza, manutenção). Não varia com o número de hóspedes." },
-    cafePorPax:  { label: "Café p/ Hóspede",  prefix: "R$", value: 0,   min: 0, max: 999, tip: "Custo do café por hospede (média do valor dos insumos, mão de obra etc.). Esse valor varia de acordo com a quantidade de hóspedes." },
-    arCond:      { label: "Ar-Condicionado",  prefix: "R$", value: 0,   min: 0, max: 999, tip: "Custo do ar condicionado fixo por quarto por noite (energia, manutenção, depreciação). Não varia com o número de hóspedes." },
-    margemValor: { label: "Margem de Lucro",  prefix: "R$", value: 0,   min: 0, max: 9999, tip: "Valor pretendido de lucro com a diária. Esse valor varia de acordo com a quantidade de hóspedes." },
-    maxPax:      { label: "Máx. de Hóspedes", prefix: "#",  value: 1,   min: 1, max: 10, tip: "Quantidade de hospedes por quarto por noite (minimo 1 maximo 10)." },
-    desconto:    { label: "Desconto (%)",     prefix: "%",  value: 0,   min: 0, max: 100, tip: "Desconto, vai de 0% a 100%." },
+    custoFixo:   { label: "Custo Fixo",       prefix: "R$", value: 0,   min: 0, max: 999, tip: "Custo operacional fixo por quarto por noite (energia, limpeza, manutenção). Não varia com o número de hóspedes.", ariaLabel: "Custo Fixo por quarto" },
+    cafePorPax:  { label: "Café p/ Hóspede",  prefix: "R$", value: 0,   min: 0, max: 999, tip: "Custo do café por hospede (média do valor dos insumos, mão de obra etc.). Esse valor varia de acordo com a quantidade de hóspedes.", ariaLabel: "Café da manhã por hóspede" },
+    arCond:      { label: "Ar-Condicionado",  prefix: "R$", value: 0,   min: 0, max: 999, tip: "Custo do ar condicionado fixo por quarto por noite (energia, manutenção, depreciação). Não varia com o número de hóspedes.", ariaLabel: "Custo do Ar-Condicionado" },
+    margemValor: { label: "Margem de Lucro",  prefix: "R$", value: 0,   min: 0, max: 9999, tip: "Valor pretendido de lucro com a diária. Esse valor varia de acordo com a quantidade de hóspedes.", ariaLabel: "Margem de lucro por hóspede" },
+    maxPax:      { label: "Máx. de Hóspedes", prefix: "#",  value: 1,   min: 1, max: 10, tip: "Quantidade de hospedes por quarto por noite (minimo 1 maximo 10).", ariaLabel: "Máximo de hóspedes por quarto" },
+    desconto:    { label: "Desconto (%)",     prefix: "%",  value: 0,   min: 0, max: 100, tip: "Desconto, vai de 0% a 100%.", ariaLabel: "Percentual de desconto" },
   };
 
   // Build param cards
@@ -155,13 +182,13 @@
     card.innerHTML =
       '<div class="param-label-wrap">' +
         '<span class="param-label" style="margin-bottom:0">' + p.label + '</span>' +
-        (p.tip ? '<span class="tooltip-icon">?<span class="tooltip-text">' + p.tip + '</span></span>' : '') +
+        (p.tip ? '<span class="tooltip-icon" aria-label="Mais informações">?<span class="tooltip-text">' + p.tip + '</span></span>' : '') +
       '</div>' +
       '<div class="param-input-wrap">' +
-        '<span class="param-prefix">' + p.prefix + '</span>' +
-        '<input class="param-input" id="input-' + key + '" type="number" value="' + p.value + '" min="' + p.min + '" max="' + p.max + '" />' +
+        '<span class="param-prefix" aria-hidden="true">' + p.prefix + '</span>' +
+        '<input class="param-input" id="input-' + key + '" type="number" value="' + p.value + '" min="' + p.min + '" max="' + p.max + '" aria-label="' + p.ariaLabel + '" />' +
       '</div>' +
-      '<input class="param-slider" id="slider-' + key + '" type="range" min="' + p.min + '" max="' + p.max + '" value="' + p.value + '" />';
+      '<input class="param-slider" id="slider-' + key + '" type="range" min="' + p.min + '" max="' + p.max + '" value="' + p.value + '" aria-label="' + p.ariaLabel + '" />';
     grid.appendChild(card);
 
     const input  = card.querySelector("#input-" + key);
@@ -169,6 +196,8 @@
 
     input.addEventListener("input", function() {
       var v = parseFloat(input.value) || 0;
+      if (v < p.min) v = p.min;
+      if (v > p.max) v = p.max;
       p.value = v;
       slider.value = v;
       render();

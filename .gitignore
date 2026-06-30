@@ -1,0 +1,30 @@
+# ============================================
+# PRE-O INTELIGENTE — .gitignore
+# ============================================
+
+# IDE / Editor
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+
+# Build / Runtime
+node_modules/
+package-lock.json
+*.log
+coverage/
+dist/
+build/
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Secrets / Configs
+.env
+.env.local
+
+# Temp files
+*.tmp
+*.temp
