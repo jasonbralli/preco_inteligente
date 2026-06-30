@@ -1,0 +1,173 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Testes Unitários · PRE-O INTELIGENTE</title>
+  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;600;700&family=Source+Sans+3:wght@300;400;600&display=swap" rel="stylesheet" />
+  <style>
+    body { background: #faf7f2; font-family: 'Source Sans 3', sans-serif; color: #1a1208; padding: 2rem; max-width: 800px; margin: 0 auto; }
+    h1 { font-family: 'Playfair Display', serif; color: #5c3d1e; margin-bottom: 1rem; }
+    .test { padding: 0.5rem; margin: 0.3rem 0; border-radius: 4px; font-size: 0.9rem; }
+    .pass { background: #dcfce7; color: #166534; border-left: 4px solid #22c55e; }
+    .fail { background: #fee2e2; color: #991b1b; border-left: 4px solid #ef4444; }
+    #summary { margin-top: 1.5rem; padding: 1rem; background: white; border-radius: 8px; border: 1px solid #e8d9c0; }
+    #summary h2 { color: #5c3d1e; margin-bottom: 0.5rem; }
+    .stat { font-size: 1.1rem; }
+    .stat-pass { color: #22c55e; font-weight: 600; }
+    .stat-fail { color: #ef4444; font-weight: 600; }
+  </style>
+</head>
+<body>
+  <h1>Testes Unitários — PRE-O INTELIGENTE</h1>
+  <p style="color:#6b4f2e;margin-bottom:1rem">Abra este arquivo no navegador para executar os testes.</p>
+  <div id="results"></div>
+  <div id="summary"></div>
+
+  <script>
+    // ============================================
+    // Funções copiadas de index.html — manter sincronizado
+    // ============================================
+    
+    function sanitizeInput(str) {
+      if (str === null || str === undefined) return "";
+      return String(str).replace(/[R$\s.]/g, '').replace(',', '.').trim();
+    }
+
+    function validateInput(raw, min, max) {
+      const sanitized = sanitizeInput(raw);
+      if (sanitized === "" || sanitized === "-") {
+        return { valid: false, value: min, error: "Campo vazio" };
+      }
+      const n = parseFloat(sanitized);
+      if (isNaN(n)) {
+        return { valid: false, value: min, error: "Valor inválido" };
+      }
+      if (n < min) {
+        return { valid: false, value: min, error: "Ajustado para mínimo" };
+      }
+      if (n > max) {
+        return { valid: false, value: max, error: "Ajustado para máximo" };
+      }
+      return { valid: true, value: n, error: null };
+    }
+
+    function clamp(v, min, max) {
+      const n = parseFloat(v);
+      if (isNaN(n)) return min;
+      return Math.max(min, Math.min(max, n));
+    }
+
+    function profitColor(pct) {
+      var n = parseFloat(pct);
+      if (n < 0)  return "#ef4444";
+      if (n >= 45) return "#22c55e";
+      if (n >= 35) return "#eab308";
+      return "#f97316";
+    }
+
+    // ============================================
+    // Test runner simples
+    // ============================================
+    
+    let passed = 0;
+    let failed = 0;
+    const results = document.getElementById("results");
+
+    function assertEqual(actual, expected, testName) {
+      const div = document.createElement("div");
+      if (actual === expected) {
+        div.className = "test pass";
+        div.textContent = "✓ " + testName;
+        passed++;
+      } else {
+        div.className = "test fail";
+        div.textContent = "✗ " + testName + " — esperado: " + expected + ", obtido: " + actual;
+        failed++;
+      }
+      results.appendChild(div);
+    }
+
+    function assertTrue(condition, testName) {
+      const div = document.createElement("div");
+      if (condition) {
+        div.className = "test pass";
+        div.textContent = "✓ " + testName;
+        passed++;
+      } else {
+        div.className = "test fail";
+        div.textContent = "✗ " + testName + " — condição falsa";
+        failed++;
+      }
+      results.appendChild(div);
+    }
+
+    // ============================================
+    // Testes sanitizeInput()
+    // ============================================
+    
+    assertEqual(sanitizeInput("R$ 50,00"), "50.00", "sanitizeInput: remove R\$ e vírgula");
+    assertEqual(sanitizeInput("50,00"), "50.00", "sanitizeInput: converte vírgula para ponto");
+    assertEqual(sanitizeInput("R$ 1.234,56"), "1234.56", "sanitizeInput: remove pontos de milhar");
+    assertEqual(sanitizeInput("  100  "), "100", "sanitizeInput: remove espaços");
+    assertEqual(sanitizeInput(""), "", "sanitizeInput: string vazia");
+    assertEqual(sanitizeInput(null), "", "sanitizeInput: null");
+    assertEqual(sanitizeInput(undefined), "", "sanitizeInput: undefined");
+
+    // ============================================
+    // Testes validateInput()
+    // ============================================
+    
+    const r1 = validateInput("50", 0, 100);
+    assertTrue(r1.valid && r1.value === 50 && r1.error === null, "validateInput: valor válido dentro da faixa");
+    
+    const r2 = validateInput("-10", 0, 100);
+    assertTrue(!r2.valid && r2.value === 0 && r2.error === "Ajustado para mínimo", "validateInput: valor abaixo do mínimo");
+    
+    const r3 = validateInput("150", 0, 100);
+    assertTrue(!r3.valid && r3.value === 100 && r3.error === "Ajustado para máximo", "validateInput: valor acima do máximo");
+    
+    const r4 = validateInput("abc", 0, 100);
+    assertTrue(!r4.valid && r4.value === 0 && r4.error === "Valor inválido", "validateInput: texto inválido");
+    
+    const r5 = validateInput("", 0, 100);
+    assertTrue(!r5.valid && r5.value === 0 && r5.error === "Campo vazio", "validateInput: campo vazio");
+    
+    const r6 = validateInput("R$ 75,50", 0, 100);
+    assertTrue(r6.valid && r6.value === 75.5, "validateInput: aceita valor formatado com R\$");
+
+    // ============================================
+    // Testes clamp()
+    // ============================================
+    
+    assertEqual(clamp(50, 0, 100), 50, "clamp: valor dentro da faixa");
+    assertEqual(clamp(-10, 0, 100), 0, "clamp: valor abaixo do mínimo");
+    assertEqual(clamp(150, 0, 100), 100, "clamp: valor acima do máximo");
+    assertEqual(clamp("abc", 0, 100), 0, "clamp: valor inválido retorna mínimo");
+    assertEqual(clamp(null, 0, 100), 0, "clamp: null retorna mínimo");
+
+    // ============================================
+    // Testes profitColor()
+    // ============================================
+    
+    assertEqual(profitColor(50), "#22c55e", "profitColor: ≥ 45% → verde");
+    assertEqual(profitColor(45), "#22c55e", "profitColor: exatamente 45% → verde");
+    assertEqual(profitColor(40), "#eab308", "profitColor: 35-44% → amarelo");
+    assertEqual(profitColor(35), "#eab308", "profitColor: exatamente 35% → amarelo");
+    assertEqual(profitColor(30), "#f97316", "profitColor: < 35% → laranja");
+    assertEqual(profitColor(-5), "#ef4444", "profitColor: negativo → vermelho");
+    assertEqual(profitColor(0), "#f97316", "profitColor: zero → laranja");
+
+    // ============================================
+    // Resumo
+    // ============================================
+    
+    const summary = document.getElementById("summary");
+    summary.innerHTML = 
+      "<h2>Resultado dos Testes</h2>" +
+      '<p class="stat">Total: <b>' + (passed + failed) + '</b> testes</p>' +
+      '<p class="stat">Passou: <span class="stat-pass">' + passed + '</span></p>' +
+      '<p class="stat">Falhou: <span class="stat-fail">' + failed + '</span></p>';
+  </script>
+</body>
+</html>

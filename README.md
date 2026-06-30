@@ -73,7 +73,7 @@ Usando os valores do `tarifa minima.csv`:
 
 1. Acesse as **Settings** do repositório
 2. Em **Pages**, selecione **Source**: `main` branch
-3. O site será publicado em `https://jasonbralli.github.io/PRE-O-INTELIGENTE/`
+3. O site será publicado em `https://jasonbralli.github.io/preco_inteligente/`
 
 ### Local
 
@@ -84,6 +84,8 @@ Basta abrir o `index.html` no navegador — não requer servidor web.
 ```
 .
 ├── index.html          # Aplicação principal
+├── test.html           # Testes unitários
+├── RELATORIO.md        # Relatório técnico
 ├── .gitignore          # Arquivos ignorados pelo Git
 ├── tarifa minima.csv   # Dados de exemplo
 └── README.md           # Esta documentação
