@@ -1,4 +1,4 @@
-# PRE-O INTELIGENTE
+# PREÇO INTELIGENTE
 
 Ferramenta simples para precificação de diárias em pousadas e pequenos hotéis.
 
