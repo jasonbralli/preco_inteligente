@@ -272,10 +272,14 @@
     });
 
     slider.addEventListener("input", function() {
-      var v = clamp(slider.value, p.min, p.max);
-      p.value = v;
-      input.value = v;
-      clearError();
+      var result = validateInput(slider.value, p.min, p.max);
+      p.value = result.value;
+      input.value = result.value;
+      if (result.valid) {
+        clearError();
+      } else {
+        setError(result.error);
+      }
       render();
     });
   });
